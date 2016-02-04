@@ -1,14 +1,16 @@
-                  __ _      _     _
-                 / _(_)    | |   | |
- __ _  ___  ___ | |_ _  ___| | __| |
-/ _` |/ _ \/ _ \|  _| |/ _ \ |/ _` |
-| (_| | __/ (_) | | | |  __/ | (_| |
-\__, |\___|\___/|_| |_|\___|_|\__,_|
- __/ |
-|___/
+Geofield
+========
 
-CONTENTS OF THIS FILE
----------------------
+                      __ _      _     _
+                     / _(_)    | |   | |
+     __ _  ___  ___ | |_ _  ___| | __| |
+    / _` |/ _ \/ _ \|  _| |/ _ \ |/ _` |
+    | (_| | __/ (_) | | | |  __/ | (_| |
+    \__, |\___|\___/|_| |_|\___|_|\__,_|
+     __/ |
+    |___/
+
+#### Contents of this File
 
  * About Geofield
  * Install
@@ -16,28 +18,27 @@ CONTENTS OF THIS FILE
  * Credits
  * API notes
 
-ABOUT GEOFIELD
+About Geofield
 --------------
-Geofield (http://drupal.org/project/geofield) is a Drupal 7 module that
-provides a field types for storing geographic data. This data can be attached
-to any entity, e.g., nodes, users and taxonomy terms. Geofield provides
-different widgets for data input and formatters for data output. The Geofield
-module can can store data as Latitude and Longitude, Bounding Box and Well
-Known Text (WKT) and it supports all types of geographical data: points,
-lines, polygons, multitypes et cetera.
+
+Geofield is a Backdrop module that provides a field types for storing 
+geographic data. This data can be attached to any entity, e.g., nodes, users 
+and taxonomy terms. Geofield provides different widgets for data input and 
+formatters for data output. The Geofield module can can store data as Latitude 
+and Longitude, Bounding Box and Well Known Text (WKT) and it supports all 
+types of geographical data: points, lines, polygons, multitypes et cetera.
 
 Great documentation on Geofield can be found at http://drupal.org/node/1089574
 
-INSTALL
+Install
 -------
 
-Install the modules Geofield and geoPHP in the usual way. General information
-on installing Drupal modules can be found here: http://drupal.
-org/documentation/install/modules-themes/modules-7
+- Install this module and geophp using the official Backdrop CMS instructions 
+  at https://backdropcms.org/guide/modules
 
 Optionally install Open Layers 2: http://drupal.org/project/openlayers
 
-CONFIGURE
+Configure
 ---------
 
 To add a geofield to a content type go to /admin/structure/types/ and choose
@@ -60,15 +61,24 @@ Go to  /admin/structure/types and choose "Manage display".
 
 Note: you can also add a geofield to a user, a taxonomy term or a comment.
 
-CREDITS
--------
-Original author:  Tristan O'Neil
-Contributors:     Alex Barth, Jeff Miccolis, Young Hahn, Tom MacWright,
-                  Patrick Hayes, Dave Tarc, Nikhil Trivedi, Marek Sotak,
-                  Khalid Jebbari, Brandon Morrison, David Peterson
+Current Maintainers
+-------------------
 
-API NOTES
+- Wes Jones (https://github.com/earthday47)
+- gifad (https://github.com/gifad)
+
+Credits
+-------
+
+- Ported to Backdrop CMS by gifad (https://github.com/gifad)
+- Originally written for Drupal by: Tristan O'Neil
+- Contributors to Drupal project: Alex Barth, Jeff Miccolis, Young Hahn, Tom 
+  MacWright, Patrick Hayes, Dave Tarc, Nikhil Trivedi, Marek Sotak, Khalid 
+  Jebbari, Brandon Morrison, David Peterson
+
+API Notes
 ---------
+
 Geofield fields contain nine columns of information about the geographic data
 that is stores. At its heart is the 'wkt' column where it stores the full
 geometry in the 'Well Known Text' (WKT) format. All other columns are metadata
