@@ -47,13 +47,7 @@ function geofield_field_info() {
  * defines a 'postinstall' callback, if so, call it.
  */
 function geofield_field_update_field($field, $prior_field, $has_data) {
-  if ($field['type'] == 'geofield') {
-    $backend = ctools_get_plugins('geofield', 'geofield_backend', $field['settings']['backend']);
-    if (!empty($backend['update_field'])) {
-      $postinstall_callback = $backend['update_field'];
-      $postinstall_callback($field, $prior_field, $has_data);
-    }
-  }
+  // remove ctools
 }
 
 /**
@@ -78,42 +72,15 @@ function geofield_field_update_instance($instance, $prior_instance) {
  * defines a 'postdelete' callback, if so, call it.
  */
 function geofield_field_delete_field($field) {
-  if ($field['type'] == 'geofield') {
-    $backend = ctools_get_plugins('geofield', 'geofield_backend', $field['settings']['backend']);
-    if (!empty($backend['delete_field'])) {
-      $delete_field_callback = $backend['delete_field'];
-      $delete_field_callback($field);
-    }
-  }
+  // remove ctools
 }
 
 /**
  * Implements hook_field_settings_form().
  */
 function geofield_field_settings_form($field, $instance, $has_data) {
-  ctools_include('plugins');
   $settings = $field['settings'];
-
-  $backend_options = array();
-  $backends = ctools_get_plugins('geofield', 'geofield_backend');
-  foreach ($backends as $id => $backend) {
-    if (isset($backend['requirements'])) {
-      if ($backend['requirements']) {
-        $callback = $backend['requirements'];
-        $error = '';
-        if (!$callback($error)) {
-          $form['backend_error'][] = array(
-            //@@TODO: Use t() func
-            //@@TODO: css to add some red and bold
-            '#markup' => '<div class="geofield-backend-error">' . $backend['title'] . ' not usable because ' . $error . '</div>',
-          );
-          continue;
-        }
-      }
-    }
-    $backend_options[$id] = $backend['title'];
-  }
-
+  $backend_options['default'] = 'Default';
   $form['backend'] = array(
     '#type' => 'select',
     '#title' => 'Storage Backend',
@@ -122,31 +89,10 @@ function geofield_field_settings_form($field, $instance, $has_data) {
     '#description' => "Select the Geospatial storage backend you would like to use to store geofield geometry data. If you don't know what this means, select 'Default'.",
     '#disabled' => $has_data,
   );
-  
+
   $form['settings'] = array(
     '#tree' => TRUE,
   );
-
-  // Expose backend-settings, if they have them
-  foreach ($backends as $id => $backend) {
-    if (isset($backend['settings'])) {
-      if ($backend['settings']) {
-        $callback = $backend['settings'];
-        $form[$id] = array(
-          '#type' => 'fieldset',
-          '#tree' => TRUE,
-          '#title' => $backend['title'] . ' Settings',
-          '#states' => array(
-            'visible' => array(
-              ':input[name="field[settings][backend]"]' => array('value' => $id),
-            ),
-          ),
-        );
-        $form[$id] = array_merge($form[$id], $callback($field, $instance, $has_data));
-      }
-    }
-  }
-
   return $form;
 }
 
@@ -154,43 +100,15 @@ function geofield_field_settings_form($field, $instance, $has_data) {
  * Implements hook_field_validate().
  */
 function geofield_field_validate($entity_type, $entity, $field, $instance, $langcode, $items, &$errors) {
-  ctools_include('plugins');
-  $backend = ctools_get_plugins('geofield', 'geofield_backend', $field['settings']['backend']);
-
   foreach ($items as $delta => $item) {
-    $geom_empty = geofield_geom_is_empty($item);
-
-    // Required field empty.
-    if ($instance['required'] && $geom_empty) {
-      $errors[$field['field_name']][$langcode][$delta][] = array(
-        'error' => 'data_missing', 
-        'message' => t('%name is required and must not be empty.', array('%name' => $instance['label'])),
-      );
-    }
-    else {
-      // Geometry errors.
-      if ($geom_empty) {
-        return FALSE;
-      }
-      else {
-        $error = geofield_validate_geom($item);
-        if ($error) {
-          $errors[$field['field_name']][$langcode][$delta][] = array(
-            'error' => 'data_faulty', 
-            'message' => t('%name: Specified location data is invalid.', array('%name' => $instance['label'])),
-          );
-        }
-
-        if (!empty($backend['validate'])) {
-          $validate_callback = $backend['validate'];
-          $error = $validate_callback($item);
-          if ($error) {
-            $errors[$field['field_name']][$langcode][$delta][] = array(
-              'error' => 'data_faulty',
-              'message' => t('%name: Specified location data is invalid.', array('%name' => $instance['label'])),
-            );
-          }
-        }
+    // Geometry errors.
+    if (!geofield_geom_is_empty($item)) {
+      $error = geofield_validate_geom($item);
+      if ($error) {
+        $errors[$field['field_name']][$langcode][$delta][] = array(
+          'error' => 'data_faulty',
+          'message' => t('%name: Specified location data is invalid.', array('%name' => $instance['label'])),
+        );
       }
     }
   }
@@ -282,16 +200,17 @@ function geofield_field_presave($entity_type, $entity, $field, $instance, $langc
       }
     }
 
-    ctools_include('plugins');
-
-    $backend = ctools_get_plugins('geofield', 'geofield_backend', $field['settings']['backend']);
-    $save_callback = $backend['save'];
     // For each delta, we compute all the auxiliary columns and transform the geom column into a geometry object
     // We then pass the geometry object (now stored in the geom column) to the backend to prepare it for insertion into the database
     foreach ($items as $delta => $item) {
       $items[$delta] = geofield_compute_values($item);
       if (isset($items[$delta]['geom']) && $items[$delta]['geom']) {
-        $items[$delta]['geom'] = $save_callback($items[$delta]['geom']);
+
+        $geometry = $items[$delta]['geom'];
+        $geom = geoPHP::load($geometry);
+        $content = $geom->out('wkb');
+
+        $items[$delta]['geom'] = $content; // $save_callback($items[$delta]['geom']);
       }
     }
   }
@@ -366,34 +285,6 @@ function geofield_views_api() {
     'api' => '3.0',
     'path' => drupal_get_path('module', 'geofield') . '/views',
   );
-}
-
-/**
- * Implements hook_ctools_plugin_type().
- */
-function geofield_ctools_plugin_type() {
-  return array(
-    'geofield_backend' => array(),
-    'behaviors' => array(
-      'use hooks' => TRUE,
-    )
-  );
-}
-
-/**
- * Implements hook_ctools_plugin_api().
- */
-function geofield_ctools_plugin_api($module, $api) {
-  return array('version' => 1);
-}
-
-/**
-* Implementation of hook_ctools_plugin_directory().
-*/
-function geofield_ctools_plugin_directory($module, $plugin) {
-  if ($plugin == 'geofield_backend') {
-    return 'includes/' . $plugin;
-  }
 }
 
 /**
@@ -684,7 +575,6 @@ function geofield_latlon_DECtoCCS($dec, $axis) {
  *   A string suitable for injection into DBTNG. Any option passed into the function will be baked into the string directly. Any variable missing will
  *     be represented as :[variable]. (i.e. :earth_radius).
  */
-
 function geofield_haversine($options = array()) {
   $formula = '( :earth_radius * ACOS( COS( RADIANS(:origin_latitude) ) * COS( RADIANS(:destination_latitude) ) * COS( RADIANS(:destination_longitude) - RADIANS(:origin_longitude) ) + SIN( RADIANS(:origin_latitude) ) * SIN( RADIANS(:destination_latitude) ) ) )';
 
