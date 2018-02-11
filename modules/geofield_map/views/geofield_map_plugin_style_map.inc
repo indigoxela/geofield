@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * This file holds style plugin for Geofield Maps
