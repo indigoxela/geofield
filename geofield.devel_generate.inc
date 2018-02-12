@@ -1,7 +1,8 @@
 <?php
 /**
  * @file
- * Create random data to populate geofields.
+ * Provides hooks for integration with Devel (https://www.drupal.org/project/devel)
+ * Creates random data to populate geofields.
  */
 
 /**

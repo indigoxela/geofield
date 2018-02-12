@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Provides hooks for integration with OpenLayers (http://drupal.org/project/openlayers)

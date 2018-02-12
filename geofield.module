@@ -1,15 +1,30 @@
 <?php
+/**
+ * @file
+ * Stores geographic and location data (points, lines, and polygons).
+ */
 
 module_load_include('inc', 'geofield', 'geofield.elements');
 module_load_include('inc', 'geofield', 'geofield.widgets');
 module_load_include('inc', 'geofield', 'geofield.formatters');
-module_load_include('inc', 'geofield', 'geofield.openlayers');
-module_load_include('inc', 'geofield', 'geofield.feeds');
-module_load_include('inc', 'geofield', 'geofield.apachesolr');
-module_load_include('inc', 'geofield', 'geofield.schemaorg');
-module_load_include('inc', 'geofield', 'geofield.microdata');
 
-/* *
+if (module_exists('openlayers')) {
+  module_load_include('inc', 'geofield', 'geofield.openlayers');
+}
+if (module_exists('feeds')) {
+  module_load_include('inc', 'geofield', 'geofield.feeds');
+}
+if (module_exists('apachesolr')) {
+  module_load_include('inc', 'geofield', 'geofield.apachesolr');
+}
+if (module_exists('schemaorg')) {
+  module_load_include('inc', 'geofield', 'geofield.schemaorg');
+}
+if (module_exists('microdata')) {
+  module_load_include('inc', 'geofield', 'geofield.microdata');
+}
+
+/**
  * Max length of geohashes (imposed by database column length).
  */
 define('GEOFIELD_GEOHASH_LENGTH', 16);
@@ -42,7 +57,7 @@ function geofield_field_info() {
 
 /**
  * Implements hook_field_update_field.
- * 
+ *
  * If a geofield has been created, check to see if the plugin controlling it
  * defines a 'postinstall' callback, if so, call it.
  */
@@ -56,7 +71,6 @@ function geofield_field_update_field($field, $prior_field, $has_data) {
  * We implement this hook to prevent instance settings that may not apply to our different
  * widgets from breaking when switching widgets. See http://drupal.org/node/1840920.
  */
-
 function geofield_field_update_instance($instance, $prior_instance) {
   if (!empty($instance['widget']['type']) && !empty($prior_instance['widget']['type']) && $instance['widget']['type'] != $prior_instance['widget']['type']) {
     $instance['default_value'] = array();
@@ -67,7 +81,7 @@ function geofield_field_update_instance($instance, $prior_instance) {
 
 /**
  * Implements hook_field_delete_field.
- * 
+ *
  * If a geofield has been deleted, check to see if the plugin controlling it
  * defines a 'postdelete' callback, if so, call it.
  */
@@ -219,7 +233,7 @@ function geofield_field_presave($entity_type, $entity, $field, $instance, $langc
 /**
  * Implements hook_field_load().
  *
- * Geofield stores it's data as WKB, but a binary format can cause 
+ * Geofield stores it's data as WKB, but a binary format can cause
  * issues/confusion with working with other modules, notably Services.
  * To improve DX/discoverability of what we're storing, we convert
  * to WKT on load.
@@ -335,13 +349,12 @@ function geofield_compute_values($raw_data, $input_format = NULL) {
  * @return
  *   A populated geoPHP geometry object if valid geometry, no return otherwise.
  *
- * @TODO: Refactor the function to not check for $input_format from both the optional secondary parameter and 
+ * @TODO: Refactor the function to not check for $input_format from both the optional secondary parameter and
  *   an array item in $raw_data. This is probably an artifact from how Geofield's widgets pass data to various field
  *   hooks. We should only check the optional secondary parameter.
  * @TODO: Move constants from geofield.widgets.inc to geofield.module
  * @TODO: Provide useful failure return (FALSE)
  */
-
 function geofield_geometry_from_values($raw_data, $input_format = NULL) {
   // Load up geoPHP to do the conversions
   $geophp = geophp_load();
@@ -366,7 +379,8 @@ function geofield_geometry_from_values($raw_data, $input_format = NULL) {
       else {
         $geometry = geoPHP::load($raw_data['geom'], $raw_data['input_format']);
       }
-    } else {
+    }
+    else {
       // No input format - let geoPHP figure it out
       if (!empty($raw_data['geom'])) {
         $geometry = geoPHP::load($raw_data['geom']);

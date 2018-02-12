@@ -1,4 +1,8 @@
 <?php
+/**
+ * @file
+ * Provides hooks for integration with Schemaorg (https://www.drupal.org/project/schemaorg)
+ */
 
 /**
  * Schema.org format.

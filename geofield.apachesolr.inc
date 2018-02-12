@@ -1,4 +1,8 @@
 <?php
+/**
+ * @file
+ * Provides hooks for integration with ApacheSolr (https://www.drupal.org/project/apachesolr)
+ */
 
 /**
  * Implements hook_apachesolr_field_mappings().

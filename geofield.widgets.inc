@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Provides field widget hooks for geofield module.

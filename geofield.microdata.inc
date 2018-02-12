@@ -1,4 +1,8 @@
 <?php
+/**
+ * @file
+ * Provides hooks for integration with Microdata (https://www.drupal.org/project/microdata)
+ */
 
 /**
  * implements hook_microdata_value_types_alter().
