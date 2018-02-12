@@ -108,10 +108,11 @@ function geofield_map_field_formatter_view($entity_type, $entity, $field, $insta
       'class' => 'geofieldMap',
     );
 
+    $api_url = geofield_map_build_url();
     $element[0] = array(
       '#attached' => array(
         'js' => array(
-          '//maps.googleapis.com/maps/api/js?sensor=false' => array('type' => 'external'),
+          $api_url => array('type' => 'external'),
           backdrop_get_path('module', 'geofield_map') . '/js/GeoJSON.js',
           backdrop_get_path('module', 'geofield_map') . '/js/geofield_map.js',
           array('data' => array('geofieldMap' => $js_settings), 'type' => 'setting'),
@@ -442,4 +443,27 @@ function geofield_map_settings_do($settings) {
     'center' => $settings['geofield_map_center'],
   );
   return $map_settings;
+}
+
+/**
+ * Helper function: builds a google maps URL with API key.
+ *
+ * @return string
+ *   URL for contacting the google maps JavaScript API, complete with key.
+ */
+function geofield_map_build_url() {
+  $query = array('sensor' => 'false');
+
+  if (module_exists('geocoder')) {
+    $config = config('geocoder.settings');
+    $auth_method = $config->get('geocoder_google_auth_method');
+    $api_key = trim($config->get('geocoder_apikey_google'));
+    if ($auth_method == 2 && !empty($api_key)) {
+      $query['key'] = $api_key;
+    }
+  }
+
+  $url = url('https://maps.googleapis.com/maps/api/js', array('query' => $query));
+
+  return $url;
 }
