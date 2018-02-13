@@ -5,7 +5,7 @@ backdrop = 1.x
 type = module
 package = Fields
 
-// @todo remvoe, these are all added via module_load_include().
+// @todo remove, these are all added via module_load_include().
 files[] = geofield.elements.inc
 files[] = geofield.widgets.inc
 files[] = geofield.formatters.inc
