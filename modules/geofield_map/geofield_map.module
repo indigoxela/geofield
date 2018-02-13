@@ -1,24 +1,35 @@
 <?php
+/**
+ * @file
+ * Provides a basic mapping interface for Geofields.
+ */
 
 // Absolute maximum for the map zoom level. The actual maximum is determined
 // by the available detail level of each location.
 define('GEOFIELD_MAP_MAX_ZOOM', 22);
 
 /**
+ * Implements hook_autoload_info().
+ */
+function geofield_map_autoload_info() {
+  return array(
+    'geofield_map_plugin_style_map' => 'views/geofield_map_plugin_style_map.inc',
+  );
+}
+
+/**
  * Implements hook_views_api().
  */
-
 function geofield_map_views_api() {
   return array(
     'api' => '3.0-alpha1',
-    'path' => drupal_get_path('module', 'geofield_map') . '/includes',
+    'path' => backdrop_get_path('module', 'geofield_map'),
   );
 }
 
 /**
  * Implements hook_field_formatter_info().
  */
-
 function geofield_map_field_formatter_info() {
   return array(
     'geofield_map_map' => array(
@@ -56,7 +67,6 @@ function geofield_map_field_formatter_info() {
 /**
  * Implements hook_field_formatter_view().
  */
-
 function geofield_map_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
   $element = array();
 
@@ -80,7 +90,7 @@ function geofield_map_field_formatter_view($entity_type, $entity, $field, $insta
   }
 
   if (!empty($data)) {
-    $map_id = drupal_html_id("geofield_map_entity_{$entity_type}_{$entity_id}_{$field['field_name']}");
+    $map_id = backdrop_html_id("geofield_map_entity_{$entity_type}_{$entity_id}_{$field['field_name']}");
 
     $js_settings = array(
       $map_id => array(
@@ -88,30 +98,30 @@ function geofield_map_field_formatter_view($entity_type, $entity, $field, $insta
         'data' => count($data) == 1 ?
           $data[0] :
           array( 'type' => 'GeometryCollection', 'geometries' => $data),
-
       ),
     );
 
     $container_attributes = array(
-      //No need for defaults here - these are populated from the field defaults.
+      // No need for defaults here. These are populated from the field defaults.
       'style' => "height:{$settings['geofield_map_height']}; width:{$settings['geofield_map_width']}",
       'id' => $map_id,
       'class' => 'geofieldMap',
     );
 
+    $api_url = geofield_map_build_url();
     $element[0] = array(
       '#attached' => array(
         'js' => array(
-          '//maps.googleapis.com/maps/api/js?sensor=false' => array('type' => 'external'),
-          drupal_get_path('module', 'geofield_map') . '/js/GeoJSON.js',
-          drupal_get_path('module', 'geofield_map') . '/js/geofield_map.js',
+          $api_url => array('type' => 'external'),
+          backdrop_get_path('module', 'geofield_map') . '/js/GeoJSON.js',
+          backdrop_get_path('module', 'geofield_map') . '/js/geofield_map.js',
           array('data' => array('geofieldMap' => $js_settings), 'type' => 'setting'),
         ),
         'css' => array(
-          drupal_get_path('module', 'geofield_map') . '/css/geofield_map.css',
+          backdrop_get_path('module', 'geofield_map') . '/css/geofield_map.css',
         ),
       ),
-      '#markup' => '<div' . drupal_attributes($container_attributes) . '></div>',
+      '#markup' => '<div' . backdrop_attributes($container_attributes) . '></div>',
     );
   }
 
@@ -126,6 +136,7 @@ function geofield_map_field_formatter_settings_form($field, $instance, $view_mod
   $settings = $display['settings'];
 
   $element = geofield_map_settings_form($settings);
+
   return $element;
 }
 
@@ -184,9 +195,19 @@ function geofield_map_field_formatter_settings_summary($field, $instance, $view_
   }
 
   return implode('<br />', $summary);
-
 }
 
+/**
+ * Form builder.
+ *
+ * @param array $settings
+ *   @todo
+ * @param array $element
+ *   @todo
+ *
+ * @return array
+ *   @todo
+ */
 function geofield_map_settings_form($settings, $element = array()) {
   $element['geofield_map_width'] = array(
     '#type' => 'textfield',
@@ -218,21 +239,21 @@ function geofield_map_settings_form($settings, $element = array()) {
     '#type' => 'select',
     '#title' => t('Zoom'),
     '#default_value' => isset($settings['geofield_map_zoom']) ? $settings['geofield_map_zoom'] : min(8, GEOFIELD_MAP_MAX_ZOOM),
-    '#options' => drupal_map_assoc(range(0, GEOFIELD_MAP_MAX_ZOOM)),
+    '#options' => backdrop_map_assoc(range(0, GEOFIELD_MAP_MAX_ZOOM)),
     '#description' => t('The default zoom level of a Google map.'),
   );
   $element['geofield_map_min_zoom'] = array(
     '#type' => 'select',
     '#title' => t('Zoom minimum'),
     '#default_value' => isset($settings['geofield_map_min_zoom']) ? $settings['geofield_map_min_zoom'] : 0,
-    '#options' => drupal_map_assoc(range(0, GEOFIELD_MAP_MAX_ZOOM)),
+    '#options' => backdrop_map_assoc(range(0, GEOFIELD_MAP_MAX_ZOOM)),
     '#description' => t('The minimum zoom level of a Google map.'),
   );
   $element['geofield_map_max_zoom'] = array(
     '#type' => 'select',
     '#title' => t('Zoom maximum'),
     '#default_value' => isset($settings['geofield_map_max_zoom']) ? $settings['geofield_map_max_zoom'] : 0,
-    '#options' => drupal_map_assoc(range(0, GEOFIELD_MAP_MAX_ZOOM)),
+    '#options' => backdrop_map_assoc(range(0, GEOFIELD_MAP_MAX_ZOOM)),
     '#description' => t('The maximum zoom level of a Google map. Set to 0 to ignore limit.'),
     '#element_validate' => array('geofield_map_zoom_level_validate'),
   );
@@ -364,10 +385,18 @@ function geofield_map_settings_form($settings, $element = array()) {
 
 }
 
-/*
- * Validate geofield_map_max_zoom to prevent errors when rendering a map
- * with a defined maxZoom lower than the defined minZoom.
- */
+ /**
+  * Validate handler. Check geofield_map_max_zoom to prevent errors when
+  * rendering a map with a defined maxZoom lower than the defined minZoom.
+  *
+  * @param array $element
+  *   @todo
+  * @param array $form_state
+  *   @todo
+  *
+  * @return array
+  *   @todo
+  */
 function geofield_map_zoom_level_validate($element, &$form_state) {
   // Get to the actual values in a form tree.
   $parents = $element['#parents'];
@@ -383,8 +412,16 @@ function geofield_map_zoom_level_validate($element, &$form_state) {
   }
 }
 
+/**
+ * @todo
+ *
+ * @param array $settings
+ *   @todo
+ *
+ * @return array
+ *   @todo
+ */
 function geofield_map_settings_do($settings) {
-
   $map_settings = array(
     'zoom' => $settings['geofield_map_zoom'],
     'min_zoom' => $settings['geofield_map_min_zoom'],
@@ -406,5 +443,27 @@ function geofield_map_settings_do($settings) {
     'center' => $settings['geofield_map_center'],
   );
   return $map_settings;
+}
 
+/**
+ * Helper function: builds a google maps URL with API key.
+ *
+ * @return string
+ *   URL for contacting the google maps JavaScript API, complete with key.
+ */
+function geofield_map_build_url() {
+  $query = array('sensor' => 'false');
+
+  if (module_exists('geocoder')) {
+    $config = config('geocoder.settings');
+    $auth_method = $config->get('geocoder_google_auth_method');
+    $api_key = trim($config->get('geocoder_apikey_google'));
+    if ($auth_method == 2 && !empty($api_key)) {
+      $query['key'] = $api_key;
+    }
+  }
+
+  $url = url('https://maps.googleapis.com/maps/api/js', array('query' => $query));
+
+  return $url;
 }
