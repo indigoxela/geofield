@@ -5,18 +5,10 @@ backdrop = 1.x
 type = module
 package = Fields
 
-// @todo remove, these are all added via module_load_include().
-files[] = geofield.elements.inc
-files[] = geofield.widgets.inc
-files[] = geofield.formatters.inc
-files[] = geofield.openlayers.inc
-files[] = geofield.feeds.inc
-
 // @todo convert these tests to Backdrop CMS.
 files[] = tests/geofield.test
 
-// @todo Add these files via hook_autoload_info() and delete.
-files[] = views/geofield.views.inc
+// @todo Add these classes via hook_autoload_info() and delete here.
 files[] = views/handlers/geofield_handler_sort.inc
 files[] = views/handlers/geofield_handler_field.inc
 files[] = views/handlers/geofield_handler_filter.inc

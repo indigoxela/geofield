@@ -1,4 +1,8 @@
 <?php
+/**
+ * @file
+ * Provides hooks for integration with Rules (https://www.drupal.org/project/rules)
+ */
 
 /**
  * Implements hook_rules_action_info().

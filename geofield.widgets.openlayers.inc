@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Provides widget hooks on behalf of Openlayers.
@@ -171,14 +170,14 @@ function openlayers_field_widget_form(&$form, &$form_state, $field, $instance, $
     }
   }
   $combined_geom = geoPHP::geometryReduce($geoms);
-  
+
   if ($combined_geom) {
     // We want to force the combined_geom into a geometryCollection
     $geom_type = $combined_geom->geometryType();
     if ($geom_type == 'MultiPolygon' || $geom_type == 'MultiLineString' || $geom_type == 'MultiPoint') {
       $combined_geom = new GeometryCollection($combined_geom->getComponents());
     }
-  
+
     $combined_wkt = $combined_geom->out('wkt');
     // A value of 'GEOMETRYCOLLECTION EMPTY' breaks OpenLayers JS later on down the line.
     if ($combined_wkt == 'GEOMETRYCOLLECTION EMPTY') {
