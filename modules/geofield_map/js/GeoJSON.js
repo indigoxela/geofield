@@ -1,7 +1,7 @@
 // Source: https://github.com/JasonSanford/GeoJSON-to-Google-Maps
 var GeoJSON = function( geojson, options ){
   var _geometryToGoogleMaps = function( geojsonGeometry, opts, geojsonProperties ){
-    
+
     var googleObj;
 
     switch ( geojsonGeometry.type ){
@@ -15,7 +15,7 @@ var GeoJSON = function( geojson, options ){
           googleObj.set("geojsonProperties", geojsonProperties);
         }
         break;
-        
+
       case "MultiPoint":
         googleObj = [];
         var bounds = new google.maps.LatLngBounds();
@@ -33,7 +33,7 @@ var GeoJSON = function( geojson, options ){
           googleObj[k].set('bounds', bounds);
         }
         break;
-        
+
       case "LineString":
         var path = [];
         var bounds = new google.maps.LatLngBounds();
@@ -50,7 +50,7 @@ var GeoJSON = function( geojson, options ){
           googleObj.set("geojsonProperties", geojsonProperties);
         }
         break;
-        
+
       case "MultiLineString":
         googleObj = [];
         var bounds = new google.maps.LatLngBounds();
@@ -74,7 +74,7 @@ var GeoJSON = function( geojson, options ){
           googleObj[k].set('bounds', bounds);
         }
         break;
-        
+
       case "Polygon":
         var paths = [];
         var bounds = new google.maps.LatLngBounds();
@@ -94,7 +94,7 @@ var GeoJSON = function( geojson, options ){
           googleObj.set("geojsonProperties", geojsonProperties);
         }
         break;
-        
+
       case "MultiPolygon":
         googleObj = [];
         var bounds = new google.maps.LatLngBounds();
@@ -121,7 +121,7 @@ var GeoJSON = function( geojson, options ){
           googleObj[k].set('bounds', bounds);
         }
         break;
-        
+
       case "GeometryCollection":
         googleObj = [];
         if (!geojsonGeometry.geometries){
@@ -132,52 +132,56 @@ var GeoJSON = function( geojson, options ){
           }
         }
         break;
-        
+
       default:
         googleObj = _error("Invalid GeoJSON object: Geometry object must be one of \"Point\", \"LineString\", \"Polygon\" or \"MultiPolygon\".");
     }
-    
+
     return googleObj;
-    
+
   };
-  
+
   var _error = function( message ){
-  
+
     return {
       type: "Error",
       message: message
     };
-  
+
   };
-    
+
   var obj;
-  
+
   var opts = options || {};
-  
+
   switch ( geojson.type ){
-  
+
     case "FeatureCollection":
       if (!geojson.features){
         obj = _error("Invalid GeoJSON object: FeatureCollection object missing \"features\" member.");
-      }else{
+      } else {
         obj = [];
         for (var i = 0; i < geojson.features.length; i++){
           obj.push(_geometryToGoogleMaps(geojson.features[i].geometry, opts, geojson.features[i].properties));
         }
       }
       break;
-    
+
     case "GeometryCollection":
       if (!geojson.geometries){
         obj = _error("Invalid GeoJSON object: GeometryCollection object missing \"geometries\" member.");
-      }else{
+      } else {
         obj = [];
-        for (var i = 0; i < geojson.geometries.length; i++){
-          obj.push(_geometryToGoogleMaps(geojson.geometries[i], opts, geojson.geometries[i].properties));
-        }
+         for (var i = 0; i < geojson.geometries.length; i++){
+           if (geojson.geometries[i].options) {
+             obj.push(_geometryToGoogleMaps(geojson.geometries[i], geojson.geometries[i].options, geojson.geometries[i].properties));
+           } else {
+             obj.push(_geometryToGoogleMaps(geojson.geometries[i], opts, geojson.geometries[i].properties));
+           }
+         }
       }
       break;
-    
+
     case "Feature":
       if (!( geojson.properties && geojson.geometry )){
         obj = _error("Invalid GeoJSON object: Feature object missing \"properties\" or \"geometry\" member.");
@@ -185,17 +189,23 @@ var GeoJSON = function( geojson, options ){
         obj = _geometryToGoogleMaps(geojson.geometry, opts, geojson.properties);
       }
       break;
-    
+
     case "Point": case "MultiPoint": case "LineString": case "MultiLineString": case "Polygon": case "MultiPolygon":
-      obj = geojson.coordinates
-        ? obj = _geometryToGoogleMaps(geojson, opts, geojson.properties)
-        : _error("Invalid GeoJSON object: Geometry object missing \"coordinates\" member.");
+      if (geojson.options) {
+        obj = geojson.coordinates
+          ? obj = _geometryToGoogleMaps(geojson, geojson.options, geojson.properties)
+          : _error("Invalid GeoJSON object: Geometry object missing \"coordinates\" member.");
+      } else {
+        obj = geojson.coordinates
+          ? obj = _geometryToGoogleMaps(geojson, opts, geojson.properties)
+          : _error("Invalid GeoJSON object: Geometry object missing \"coordinates\" member.");
+      }
       break;
-    
+
     default:
       obj = _error("Invalid GeoJSON object: GeoJSON object must be one of \"Point\", \"LineString\", \"Polygon\", \"MultiPolygon\", \"Feature\", \"FeatureCollection\" or \"GeometryCollection\".");
-  
+
   }
-  
+
   return obj;
 };

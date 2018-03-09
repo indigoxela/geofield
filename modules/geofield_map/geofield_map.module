@@ -85,6 +85,8 @@ function geofield_map_field_formatter_view($entity_type, $entity, $field, $insta
       $datum->properties = array(
         'description' => entity_label($entity_type, $entity),
       );
+      $context = array('entity' => $entity);
+      backdrop_alter('geofield_map_data', $datum, $context);
       $data[] = $datum;
     }
   }
