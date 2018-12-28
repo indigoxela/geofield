@@ -124,6 +124,8 @@ class geofield_map_plugin_style_map extends views_plugin_style {
           $datum->properties = array(
             'description' => $description,
           );
+          $context = array('view_row' => $result);
+          backdrop_alter('geofield_map_data', $datum, $context);
           $data[] = $datum;
         }
       }
