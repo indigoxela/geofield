@@ -117,20 +117,22 @@ class geofield_map_plugin_style_map extends views_plugin_style {
         $geofield_handler = $this->view->field[$style_options['data_source']];
         $geofield = $geofield_handler->get_value($result);
 
-        if (!empty($geofield[0]['geom'])) {
-          $description = ($popup_data ? $this->rendered_fields[$id][$popup_data] : '');
-          $geometry = geoPHP::load($geofield[0]['geom']);
-          $datum = json_decode($geometry->out('json'));
-          $datum->properties = array(
-            'description' => $description,
-          );
-          $context = array('view_row' => $result);
-          backdrop_alter('geofield_map_data', $datum, $context);
-          $data[] = $datum;
+        foreach ($geofield as $delta => $geodata) {
+          if (!empty($geodata['geom'])) {
+            $description = ($popup_data ? $this->rendered_fields[$id][$popup_data] : '');
+            $geometry = geoPHP::load($geodata['geom']);
+            $datum = json_decode($geometry->out('json'));
+            $datum->properties = array(
+              'description' => $description,
+            );
+            $context = array('view_row' => $result);
+            backdrop_alter('geofield_map_data', $datum, $context);
+            $data[] = $datum;
+          }
         }
       }
 
-      if(!$data && !$style_options['geofield_map_center']){
+      if (!$data && !$style_options['geofield_map_center']){
         return;
       }
       if (count($data) == 1) {
@@ -155,14 +157,14 @@ class geofield_map_plugin_style_map extends views_plugin_style {
         ),
       );
 
-      drupal_add_js(array('geofieldMap' => $js_settings), 'setting');
+      backdrop_add_js(array('geofieldMap' => $js_settings), 'setting');
     }
 
     $api_url = geofield_map_build_url();
-    drupal_add_js($api_url, array('type' => 'external'));
-    drupal_add_js(drupal_get_path('module', 'geofield_map') . '/js/GeoJSON.js');
-    drupal_add_js(drupal_get_path('module', 'geofield_map') . '/js/geofield_map.js');
-    drupal_add_css(drupal_get_path('module', 'geofield_map') . '/css/geofield_map.css');
+    backdrop_add_js($api_url, array('type' => 'external'));
+    backdrop_add_js(backdrop_get_path('module', 'geofield_map') . '/js/GeoJSON.js');
+    backdrop_add_js(backdrop_get_path('module', 'geofield_map') . '/js/geofield_map.js');
+    backdrop_add_css(backdrop_get_path('module', 'geofield_map') . '/css/geofield_map.css');
 
     // defaults
     $width = '100%';
