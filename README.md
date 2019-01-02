@@ -21,11 +21,11 @@ Geofield
 About Geofield
 --------------
 
-Geofield is a Backdrop module that provides a field types for storing 
-geographic data. This data can be attached to any entity, e.g., nodes, users 
-and taxonomy terms. Geofield provides different widgets for data input and 
-formatters for data output. The Geofield module can can store data as Latitude 
-and Longitude, Bounding Box and Well Known Text (WKT) and it supports all 
+Geofield is a Backdrop module that provides a field types for storing
+geographic data. This data can be attached to any entity, e.g., nodes, users
+and taxonomy terms. Geofield provides different widgets for data input and
+formatters for data output. The Geofield module can can store data as Latitude
+and Longitude, Bounding Box and Well Known Text (WKT) and it supports all
 types of geographical data: points, lines, polygons, multitypes et cetera.
 
 Great documentation on Geofield can be found at http://drupal.org/node/1089574
@@ -33,7 +33,7 @@ Great documentation on Geofield can be found at http://drupal.org/node/1089574
 Install
 -------
 
-- Install this module and geophp using the official Backdrop CMS instructions 
+- Install this module and geophp using the official Backdrop CMS instructions
   at https://backdropcms.org/guide/modules
 
 Optionally install Open Layers 2: http://drupal.org/project/openlayers
@@ -66,14 +66,15 @@ Current Maintainers
 
 - Wes Jones (https://github.com/earthday47)
 - gifad (https://github.com/gifad)
+- Jen Lampton (https://github.com/jenlampton)
 
 Credits
 -------
 
 - Ported to Backdrop CMS by gifad (https://github.com/gifad)
 - Originally written for Drupal by: Tristan O'Neil
-- Contributors to Drupal project: Alex Barth, Jeff Miccolis, Young Hahn, Tom 
-  MacWright, Patrick Hayes, Dave Tarc, Nikhil Trivedi, Marek Sotak, Khalid 
+- Contributors to Drupal project: Alex Barth, Jeff Miccolis, Young Hahn, Tom
+  MacWright, Patrick Hayes, Dave Tarc, Nikhil Trivedi, Marek Sotak, Khalid
   Jebbari, Brandon Morrison, David Peterson
 
 API Notes
