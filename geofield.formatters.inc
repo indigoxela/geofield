@@ -213,6 +213,8 @@ function geofield_field_formatter_settings_summary($field, $instance, $view_mode
  * Implements hook_field_formatter_view().
  */
 function geofield_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
+  module_load_include('inc', 'geofield', 'vendor/phayes/geophp/geoPHP');
+
   $element = array();
 
   // First check to see if we have any value and remove any unset deltas
@@ -224,7 +226,6 @@ function geofield_field_formatter_view($entity_type, $entity, $field, $instance,
 
   // Transform into centroid or bounding if needed
   if ($display['settings']['data'] != 'full') {
-    geophp_load();
     if ($display['settings']['data'] == 'centroid') {
       foreach ($items as $delta => $item) {
         $centroid_wkt = 'POINT(' . $item['lon'] . ' ' . $item['lat'] . ')';
@@ -263,7 +264,6 @@ function geofield_field_formatter_view($entity_type, $entity, $field, $instance,
 
   switch ($display['type']) {
     case 'geofield_wkt':
-      geophp_load();
       foreach ($items as $delta => $item) {
         $geometry = geoPHP::load($item['geom']);
         $wkt = $geometry->out('wkt');
@@ -272,7 +272,6 @@ function geofield_field_formatter_view($entity_type, $entity, $field, $instance,
       }
       return $element;
     case 'geofield_geojson':
-      geophp_load();
       foreach ($items as $delta => $item) {
         $geometry = geoPHP::load($item['geom']);
         $json = $geometry->out('json');
@@ -280,7 +279,6 @@ function geofield_field_formatter_view($entity_type, $entity, $field, $instance,
       }
       return $element;
     case 'geofield_kml':
-      geophp_load();
       foreach ($items as $delta => $item) {
         $geometry = geoPHP::load($item['geom']);
         $kml = $geometry->out('kml');
@@ -288,7 +286,6 @@ function geofield_field_formatter_view($entity_type, $entity, $field, $instance,
       }
       return $element;
     case 'geofield_gpx':
-      geophp_load();
       foreach ($items as $delta => $item) {
         $geometry = geoPHP::load($item['geom']);
         $kml = $geometry->out('gpx');
@@ -296,7 +293,6 @@ function geofield_field_formatter_view($entity_type, $entity, $field, $instance,
       }
       return $element;
     case 'geofield_geohash':
-      geophp_load();
       foreach ($items as $delta => $item) {
         $geometry = geoPHP::load($item['geom']);
         $geohash = $geometry->out('geohash');
@@ -384,8 +380,9 @@ function _geofield_item_microdata_propertyvalue($entity, $instance, $item) {
 }
 
 function _geofield_openlayers_formatter($map_name, $items) {
+  module_load_include('inc', 'geofield', 'vendor/phayes/geophp/geoPHP');
+
   $features = array();
-  geophp_load();
 
   // Create array of $features
   foreach ($items as $delta) {
@@ -427,7 +424,8 @@ function _geofield_openlayers_formatter($map_name, $items) {
 }
 
 function _geofield_def_list_formatter($item, $settings) {
-  geophp_load();
+  module_load_include('inc', 'geofield', 'vendor/phayes/geophp/geoPHP');
+
   $geometry = geoPHP::load($item['geom']);
 
   // Single types
@@ -462,7 +460,8 @@ function _geofield_def_list_formatter_dl($info) {
 }
 
 function _geofield_description_formatter($item, $settings) {
-  geophp_load();
+  module_load_include('inc', 'geofield', 'vendor/phayes/geophp/geoPHP');
+
   $geometry = geoPHP::load($item['geom']);
 
   if (!$geometry) return '';

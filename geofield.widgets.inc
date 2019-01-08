@@ -93,8 +93,9 @@ function geofield_field_widget_settings_form($field, $instance) {
 /**
  * Implements hook_field_widget_form().
  */
-function geofield_field_widget_form(&$form, &$form_state, $field, $instance,
-  $langcode, $items, $delta, $base) {
+function geofield_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $base) {
+  module_load_include('inc', 'geofield', 'vendor/phayes/geophp/geoPHP');
+
   $element = $base;
 
   $widget = $instance['widget'];
@@ -115,7 +116,6 @@ function geofield_field_widget_form(&$form, &$form_state, $field, $instance,
         $default_value = $instance['default_value'][0]['geom'];
       }
       if (!empty($items[$delta]['geom'])) {
-        geophp_load();
         $geometry = geoPHP::load($items[$delta]['geom']);
         $default_value = $geometry->out('wkt');
       }
@@ -135,7 +135,6 @@ function geofield_field_widget_form(&$form, &$form_state, $field, $instance,
         $default_value = $instance['default_value'][0]['geom'];
       }
       if (!empty($items[$delta]['geom'])) {
-        geophp_load();
         $geometry = geoPHP::load($items[$delta]['geom']);
         $default_value = $geometry->out('json');
       }

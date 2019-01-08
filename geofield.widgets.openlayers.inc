@@ -137,7 +137,7 @@ function openlayers_widget_add_states(&$element, $selector) {
  */
 
 function openlayers_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
-  geophp_load();
+  module_load_include('inc', 'geofield', 'vendor/phayes/geophp/geoPHP');
 
   $widget = $instance['widget'];
   $parents = $form['#parents'];
@@ -324,7 +324,7 @@ function openlayers_use_geocoder_submit($form, &$form_state) {
   $field_state = field_form_get_state($parents, $field_name, $langcode, $form_state);
   $geocoder_field = $field_state['instance']['widget']['settings']['geocoder_field'];
   if ($field_value = geocoder_widget_get_field_value($element['#entity_type'], $field_state['instance'], NULL, $form_state['values'][$geocoder_field][$langcode])) {
-    geophp_load();
+    module_load_include('inc', 'geofield', 'vendor/phayes/geophp/geoPHP');
     $geometry = geoPHP::load($field_value[$langcode][$delta]['geom']);
     $field_value[$langcode][$delta]['geom'] = $geometry->out('wkt'); // OpenLayers can only use WKT, so translate
     $field_value[$langcode][$delta]['input_format'] = 'wkt';
@@ -361,7 +361,7 @@ function openlayers_geofield_widget_element_validate($element, &$form_state) {
   $container_delta = $element[0];
 
   if (!empty($container_delta['geom']['#value'])) {
-    geophp_load();
+    module_load_include('inc', 'geofield', 'vendor/phayes/geophp/geoPHP');
     $combined_geom = geoPHP::load($container_delta['geom']['#value']);
     $combined_geom = geoPHP::geometryReduce($combined_geom);
 

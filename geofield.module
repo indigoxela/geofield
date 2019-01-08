@@ -239,7 +239,7 @@ function geofield_field_presave($entity_type, $entity, $field, $instance, $langc
  * to WKT on load.
  */
 function geofield_field_load($entity_type, $entities, $field, $instances, $langcode, &$items, $age) {
-  geophp_load();
+  module_load_include('inc', 'geofield', 'vendor/phayes/geophp/geoPHP');
   if (geoPHP::geosInstalled()) {
     // process geometry directly with GEOS to help with performance/memory issues.
     $reader = new GEOSWKBReader();
@@ -318,8 +318,8 @@ function geofield_compute_values($raw_data, $input_format = NULL) {
   }
 
   // Load up geoPHP to do the conversions
-  $geophp = geophp_load();
-  if (!$geophp) {
+  module_load_include('inc', 'geofield', 'vendor/phayes/geophp/geoPHP');
+  if (!class_exists('geoPHP')) {
     drupal_set_message(t("Unable to load geoPHP library. Not all values will be calculated correctly"), 'error');
     return;
   }
@@ -357,8 +357,8 @@ function geofield_compute_values($raw_data, $input_format = NULL) {
  */
 function geofield_geometry_from_values($raw_data, $input_format = NULL) {
   // Load up geoPHP to do the conversions
-  $geophp = geophp_load();
-  if (!$geophp) {
+  module_load_include('inc', 'geofield', 'vendor/phayes/geophp/geoPHP');
+  if (!class_exists('geoPHP')) {
     drupal_set_message(t("Unable to load geoPHP library. Not all values will be calculated correctly"), 'error');
     return;
   }
