@@ -213,7 +213,7 @@ function geofield_field_formatter_settings_summary($field, $instance, $view_mode
  * Implements hook_field_formatter_view().
  */
 function geofield_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
-  module_load_include('inc', 'geofield', 'vendor/phayes/geophp/geoPHP');
+  module_load_include('inc', 'geofield', 'libraries/geophp/geoPHP');
 
   $element = array();
 
@@ -380,7 +380,7 @@ function _geofield_item_microdata_propertyvalue($entity, $instance, $item) {
 }
 
 function _geofield_openlayers_formatter($map_name, $items) {
-  module_load_include('inc', 'geofield', 'vendor/phayes/geophp/geoPHP');
+  module_load_include('inc', 'geofield', 'libraries/geophp/geoPHP');
 
   $features = array();
 
@@ -424,7 +424,7 @@ function _geofield_openlayers_formatter($map_name, $items) {
 }
 
 function _geofield_def_list_formatter($item, $settings) {
-  module_load_include('inc', 'geofield', 'vendor/phayes/geophp/geoPHP');
+  module_load_include('inc', 'geofield', 'libraries/geophp/geoPHP');
 
   $geometry = geoPHP::load($item['geom']);
 
@@ -460,7 +460,7 @@ function _geofield_def_list_formatter_dl($info) {
 }
 
 function _geofield_description_formatter($item, $settings) {
-  module_load_include('inc', 'geofield', 'vendor/phayes/geophp/geoPHP');
+  module_load_include('inc', 'geofield', 'libraries/geophp/geoPHP');
 
   $geometry = geoPHP::load($item['geom']);
 

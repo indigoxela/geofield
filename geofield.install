@@ -197,7 +197,7 @@ function geofield_update_7201(&$sandbox) {
   //   currently processing.
 
   $max_batch_count = 1000;
-  module_load_include('inc', 'geofield', 'vendor/phayes/geophp/geoPHP');
+  module_load_include('inc', 'geofield', 'libraries/geophp/geoPHP');
 
   if (!isset($sandbox['total'])) {
     // First pass. Find all the geofields in the db, add _geom field. Create
@@ -336,7 +336,7 @@ function geofield_update_7202(&$sandbox) {
     ));
 
     // Populate geohash column.
-    module_load_include('inc', 'geofield', 'vendor/phayes/geophp/geoPHP');
+    module_load_include('inc', 'geofield', 'libraries/geophp/geoPHP');
     $results = db_query('SELECT ' . $field_name . '_geom AS geom, entity_id, revision_id, delta FROM {' . $table_name . '}');
 
     foreach ($results as $record) {

@@ -68,7 +68,7 @@ function geofield_map_field_formatter_info() {
  * Implements hook_field_formatter_view().
  */
 function geofield_map_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
-  module_load_include('inc', 'geofield', 'vendor/phayes/geophp/geoPHP');
+  module_load_include('inc', 'geofield', 'libraries/geophp/geoPHP');
 
   $element = array();
 

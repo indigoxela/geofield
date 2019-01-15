@@ -94,7 +94,7 @@ function geofield_field_widget_settings_form($field, $instance) {
  * Implements hook_field_widget_form().
  */
 function geofield_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $base) {
-  module_load_include('inc', 'geofield', 'vendor/phayes/geophp/geoPHP');
+  module_load_include('inc', 'geofield', 'libraries/geophp/geoPHP');
 
   $element = $base;
 

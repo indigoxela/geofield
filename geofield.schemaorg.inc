@@ -147,7 +147,7 @@ function geofield_data_property_info($name = NULL) {
 
 
 function _geofield_geo_types_options_callback() {
-  module_load_include('inc', 'geofield', 'vendor/phayes/geophp/geoPHP');
+  module_load_include('inc', 'geofield', 'libraries/geophp/geoPHP');
   if (!class_exists('geoPHP')) {
     return;
   }

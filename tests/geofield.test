@@ -79,7 +79,7 @@ class GeofieldWidgetTestCase extends GeofieldBaseTestCase {
     include_once(drupal_get_path('module', 'geofield') . '/includes/GeoGenerator.php');
     $generator = new GeoGenerator();
     $point = $generator->random_point();
-    module_load_include('inc', 'geofield', 'vendor/phayes/geophp/geoPHP');
+    module_load_include('inc', 'geofield', 'libraries/geophp/geoPHP');
     $geometry = new Point($point[0], $point[1]);
 
     $edit = array(
@@ -306,7 +306,7 @@ class GeofieldFormatterTestCase extends GeofieldBaseTestCase {
     include_once(drupal_get_path('module', 'geofield') . '/includes/GeoGenerator.php');
     $generator = new GeoGenerator();
     $wkt = $generator->wkt_generate();
-    module_load_include('inc', 'geofield', 'vendor/phayes/geophp/geoPHP');
+    module_load_include('inc', 'geofield', 'libraries/geophp/geoPHP');
     $geometry = geoPHP::load($wkt, 'wkt');
 
     $edit = array(
@@ -330,7 +330,7 @@ class GeofieldFormatterTestCase extends GeofieldBaseTestCase {
     include_once(drupal_get_path('module', 'geofield') . '/includes/GeoGenerator.php');
     $generator = new GeoGenerator();
     $wkt = $generator->wkt_generate();
-    module_load_include('inc', 'geofield', 'vendor/phayes/geophp/geoPHP');
+    module_load_include('inc', 'geofield', 'libraries/geophp/geoPHP');
     $geometry = geoPHP::load($wkt, 'wkt');
 
     $edit = array(
@@ -359,7 +359,7 @@ class GeofieldFormatterTestCase extends GeofieldBaseTestCase {
     include_once(drupal_get_path('module', 'geofield') . '/includes/GeoGenerator.php');
     $generator = new GeoGenerator();
     $wkt = $generator->wkt_generate();
-    module_load_include('inc', 'geofield', 'vendor/phayes/geophp/geoPHP');
+    module_load_include('inc', 'geofield', 'libraries/geophp/geoPHP');
     $geometry = geoPHP::load($wkt, 'wkt');
 
     $edit = array(
