@@ -35,6 +35,30 @@ define('GEOFIELD_GEOHASH_LENGTH', 16);
 $geofield_geom_schema = TRUE;
 
 /**
+ * Implemens hook_autoload_info().
+ */
+function geofield_autoload_info() {
+  return array(
+    // Views handlers.
+    'geofield_handler_sort' => 'views/handlers/geofield_handler_sort.inc',
+    'geofield_handler_field' => 'views/handlers/geofield_handler_field.inc',
+    'geofield_handler_filter' => 'views/handlers/geofield_handler_filter.inc',
+    'geofield_handler_argument_proximity' => 'views/handlers/geofield_handler_argument_proximity.inc',
+
+    // Views proimity plugins.
+    'geofieldProximityPluginInterface' => 'views/proximity_plugins/geofieldProximityBase.inc',
+    'geofieldProximityBase' => 'views/proximity_plugins/geofieldProximityBase.inc',
+    'geofieldProximityContextualFilter' => 'views/proximity_plugins/geofieldProximityContextualFilter.inc',
+    'geofieldProximityCurrentUser' => 'views/proximity_plugins/geofieldProximityCurrentUser.inc',
+    'geofieldProximityEntityURL' => 'views/proximity_plugins/geofieldProximityEntityURL.inc',
+    'geofieldProximityExposedFilter' => 'views/proximity_plugins/geofieldProximityExposedFilter.inc',
+    'geofieldProximityGeocoder' => 'views/proximity_plugins/geofieldProximityGeocoder.inc',
+    'geofieldProximityManual' => 'views/proximity_plugins/geofieldProximityManual.inc',
+    'geofieldProximityOtherGeofield' => 'views/proximity_plugins/geofieldProximityOtherGeofield.inc',
+  );
+}
+
+/**
  * Implements hook_field_info().
  */
 function geofield_field_info() {
