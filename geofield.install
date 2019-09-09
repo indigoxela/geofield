@@ -13,8 +13,8 @@ function geofield_field_schema($field) {
   $schema_callback = '';
   /**
    * Edge case, during an update between 7.x-1.x and 7.x-2.x, if ctools is enabled,
-   * ctools will not see the geofield plugin without manually truncating the cache 
-   * tables. To bypass, we manually seed the $backend array directly if 
+   * ctools will not see the geofield plugin without manually truncating the cache
+   * tables. To bypass, we manually seed the $backend array directly if
    * $backend['schema'] still isn't declared.
    **/
   module_load_include('inc', 'geofield', 'includes/geofield_backend/default');
@@ -94,7 +94,7 @@ function geofield_update_7100() {
   $fields = field_info_fields();
   foreach ($fields as $field_name => $field) {
     if ($field['type'] == 'geofield' && $field['storage']['type'] == 'field_sql_storage') {
-      
+
       $srid_schema = array(
         'type' => 'text',
         'not null' => FALSE,
@@ -197,7 +197,7 @@ function geofield_update_7201(&$sandbox) {
   //   currently processing.
 
   $max_batch_count = 1000;
-  geophp_load();
+  module_load_include('inc', 'geofield', 'libraries/geophp/geoPHP');
 
   if (!isset($sandbox['total'])) {
     // First pass. Find all the geofields in the db, add _geom field. Create
@@ -309,7 +309,7 @@ function geofield_update_7201(&$sandbox) {
 }
 
 /**
- * Drops unused table fields srid, accuracy and source, adds 
+ * Drops unused table fields srid, accuracy and source, adds
  * geohash field, populates it.
  */
 
@@ -336,7 +336,7 @@ function geofield_update_7202(&$sandbox) {
     ));
 
     // Populate geohash column.
-    geophp_load();
+    module_load_include('inc', 'geofield', 'libraries/geophp/geoPHP');
     $results = db_query('SELECT ' . $field_name . '_geom AS geom, entity_id, revision_id, delta FROM {' . $table_name . '}');
 
     foreach ($results as $record) {
