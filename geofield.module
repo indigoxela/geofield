@@ -321,7 +321,7 @@ function geofield_field_is_empty($item, $field) {
 function geofield_views_api() {
   return array(
     'api' => '3.0',
-    'path' => drupal_get_path('module', 'geofield') . '/views',
+    'path' => backdrop_get_path('module', 'geofield') . '/views',
   );
 }
 
