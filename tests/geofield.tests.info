@@ -1,0 +1,23 @@
+[GeofieldWidgetTestCase]
+name = Geofield Widgets
+description = Test the creation of geofields.
+group = Geofield
+file = geofield.test
+
+[GeoFieldElementTestCase]
+name = Geofield FormAPI Elements
+description = Test Geofield FormAPI elements.
+group = Geofield
+file = geofield.test
+
+[GeofieldFormatterTestCase]
+name = Geofield Formatters
+description = Test the various display formatters of geofields.
+group = Geofield
+file = geofield.test
+
+[GeofieldOpenlayersTestCase]
+name = Geofield/Openlayers
+description = Integration tests for Openlayers
+group = Geofield
+file = geofield_openlayers.test

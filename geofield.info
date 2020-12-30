@@ -4,6 +4,3 @@ core = 7.x
 backdrop = 1.x
 type = module
 package = Fields
-
-// @todo convert these tests to Backdrop CMS.
-files[] = tests/geofield.test

@@ -1,0 +1,7 @@
+name = Geofield test
+description = Support module for the Geofield tests.
+backdrop = 1.x
+hidden = TRUE
+package = Testing
+
+dependencies[] = geofield
