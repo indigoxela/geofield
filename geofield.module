@@ -344,7 +344,7 @@ function geofield_compute_values($raw_data, $input_format = NULL) {
   // Load up geoPHP to do the conversions
   module_load_include('inc', 'geofield', 'libraries/geophp/geoPHP');
   if (!class_exists('geoPHP')) {
-    drupal_set_message(t("Unable to load geoPHP library. Not all values will be calculated correctly"), 'error');
+    backdrop_set_message(t("Unable to load geoPHP library. Not all values will be calculated correctly"), 'error');
     return;
   }
 
@@ -383,7 +383,7 @@ function geofield_geometry_from_values($raw_data, $input_format = NULL) {
   // Load up geoPHP to do the conversions
   module_load_include('inc', 'geofield', 'libraries/geophp/geoPHP');
   if (!class_exists('geoPHP')) {
-    drupal_set_message(t("Unable to load geoPHP library. Not all values will be calculated correctly"), 'error');
+    backdrop_set_message(t("Unable to load geoPHP library. Not all values will be calculated correctly"), 'error');
     return;
   }
 
@@ -441,7 +441,7 @@ function geofield_get_values_from_geometry($geometry) {
 
   $values['geom'] = $geometry->out('wkb');
 
-  $values['geo_type'] = drupal_strtolower($geometry->getGeomType());
+  $values['geo_type'] = backdrop_strtolower($geometry->getGeomType());
 
   if ($centroid) {
     $values['lat'] = $centroid->y();
