@@ -31,7 +31,7 @@ class geofieldProximityOtherGeofield extends geofieldProximityBase implements ge
       '#options' => $other_geofield_options,
       '#states' => array(
         'visible' => array(
-          ':input[name*="options[source]"]' => array('value' => 'other_geofield'),
+          ':input[name="options[source]"]' => array('value' => 'other_geofield'),
         ),
       ),
     );
