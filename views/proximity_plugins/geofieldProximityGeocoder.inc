@@ -18,7 +18,7 @@ class geofieldProximityGeocoder extends geofieldProximityBase implements geofiel
       '#default_value' => $views_plugin->options['geofield_proximity_geocoder'],
       '#states' => array(
         'visible' => array(
-          ':input[name*="options[source]"]' => array('value' => 'geocoder'),
+          ':input[name="options[source]"]' => array('value' => 'geocoder'),
         ),
       ),
       '#proximity_plugin_value_element' => TRUE,
@@ -37,7 +37,7 @@ class geofieldProximityGeocoder extends geofieldProximityBase implements geofiel
       '#default_value' => $views_plugin->options['geofield_proximity_geocoder_engine'],
       '#states' => array(
         'visible' => array(
-          ':input[name*="options[source]"]' => array('value' => 'geocoder'),
+          ':input[name="options[source]"]' => array('value' => 'geocoder'),
         ),
       ),
     );
