@@ -32,7 +32,7 @@ class geofieldProximityEntityURL extends geofieldProximityBase implements geofie
       '#options' => $entity_options,
       '#states' => array(
         'visible' => array(
-          ':input[name*="options[source]"]' => array('value' => 'entity_from_url'),
+          ':input[name="options[source]"]' => array('value' => 'entity_from_url'),
         ),
       ),
     );
