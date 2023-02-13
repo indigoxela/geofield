@@ -29,7 +29,7 @@ class geofieldProximityCurrentUser extends geofieldProximityBase implements geof
       '#options' => $field_options,
       '#states' => array(
         'visible' => array(
-          ':input[name*="options[source]"]' => array('value' => 'current_user'),
+          ':input[name="options[source]"]' => array('value' => 'current_user'),
         ),
       ),
     );
