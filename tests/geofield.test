@@ -11,6 +11,8 @@ require_once BACKDROP_ROOT . '/core/modules/field/tests/field.test';
  */
 class GeofieldBaseTestCase extends FieldTestCase {
 
+  protected $profile = 'testing';
+
   /**
    * @var string
    */
@@ -281,6 +283,7 @@ class GeofieldWidgetTestCase extends GeofieldBaseTestCase {
  *
  */
 class GeoFieldElementTestCase extends BackdropWebTestCase {
+  protected $profile = 'testing';
   protected $web_user;
 
   /**
