@@ -6,6 +6,9 @@
 
 require_once BACKDROP_ROOT . '/core/modules/field/tests/field.test';
 
+/**
+ *
+ */
 class GeofieldBaseTestCase extends FieldTestCase {
 
   /**
@@ -33,6 +36,9 @@ class GeofieldBaseTestCase extends FieldTestCase {
    */
   protected $web_user;
 
+  /**
+   *
+   */
   protected function _testWKTFormatter($id, $geometry, $label) {
     $entity = field_test_entity_test_load($id);
     $entity->content = field_attach_view('test_entity', $entity, 'full');
@@ -45,10 +51,13 @@ class GeofieldBaseTestCase extends FieldTestCase {
    * Helper function for testGeofieldWidgets().
    */
   protected function _testGeoFieldAPISetup($widget_type, $display_type) {
-    // Setup a field and instance
+    // Setup a field and instance.
     $entity_type = 'test_entity';
     $this->field_name = backdrop_strtolower($this->randomName());
-    $this->field = array('field_name' => $this->field_name, 'type' => 'geofield');
+    $this->field = array(
+      'field_name' => $this->field_name,
+      'type' => 'geofield',
+    );
     field_create_field($this->field);
     $this->field_instance = array(
       'field_name' => $this->field_name,
@@ -70,13 +79,23 @@ class GeofieldBaseTestCase extends FieldTestCase {
   }
 }
 
+/**
+ *
+ */
 class GeofieldWidgetTestCase extends GeofieldBaseTestCase {
 
+  /**
+   *
+   */
   protected function setUp() {
     parent::setUp(array('geofield', 'field_test'));
 
     $this->admin_user = $this->backdropCreateUser(array('administer filters'));
-    $this->web_user = $this->backdropCreateUser(array('access field_test content', 'administer field_test content', 'administer modules'));
+    $this->web_user = $this->backdropCreateUser(array(
+      'access field_test content',
+      'administer field_test content',
+      'administer modules',
+    ));
     $this->backdropLogin($this->web_user);
   }
 
@@ -86,7 +105,7 @@ class GeofieldWidgetTestCase extends GeofieldBaseTestCase {
    * Test lat/lon Input.
    */
   protected function testGeofieldFieldLatLonWidget() {
-    // Test lat/lon widget
+    // Test lat/lon widget.
     $this->_testGeoFieldAPISetup('geofield_latlon', 'geofield_wkt');
     // Display creation form.
     $langcode = LANGUAGE_NONE;
@@ -144,7 +163,7 @@ class GeofieldWidgetTestCase extends GeofieldBaseTestCase {
    * Test WKT Input.
    */
   protected function testGeofieldFieldWKTWidget() {
-    // Test lat/lon widget
+    // Test lat/lon widget.
     $this->_testGeoFieldAPISetup('geofield_wkt', 'geofield_wkt');
     // Display creation form.
     $langcode = LANGUAGE_NONE;
@@ -172,7 +191,7 @@ class GeofieldWidgetTestCase extends GeofieldBaseTestCase {
    * Test GeoJSON Input.
    */
   protected function testGeofieldFieldGeoJSONWidget() {
-    // Test lat/lon widget
+    // Test lat/lon widget.
     $this->_testGeoFieldAPISetup('geofield_geojson', 'geofield_wkt');
     // Display creation form.
     $langcode = LANGUAGE_NONE;
@@ -200,7 +219,7 @@ class GeofieldWidgetTestCase extends GeofieldBaseTestCase {
    * Test Bounds Input.
    */
   protected function testGeofieldFieldBoundsWidget() {
-    // Test lat/lon widget
+    // Test lat/lon widget.
     $this->_testGeoFieldAPISetup('geofield_bounds', 'geofield_wkt');
     // Display creation form.
     $langcode = LANGUAGE_NONE;
@@ -258,9 +277,15 @@ class GeofieldWidgetTestCase extends GeofieldBaseTestCase {
   }
 }
 
+/**
+ *
+ */
 class GeoFieldElementTestCase extends BackdropWebTestCase {
   protected $web_user;
 
+  /**
+   *
+   */
   protected function setUp() {
     parent::setUp(array('geofield', 'geofield_test'));
 
@@ -268,8 +293,11 @@ class GeoFieldElementTestCase extends BackdropWebTestCase {
     $this->backdropLogin($this->web_user);
   }
 
+  /**
+   *
+   */
   protected function testGeofieldLatLonElement() {
-    // Test form element rendering
+    // Test form element rendering.
     $this->backdropGet('geofield-latlon-element');
     $this->assertFieldById('edit-geofield-latlon-simple-lat', '', 'Latitude element for simple geofield exists.');
     $this->assertFieldById('edit-geofield-latlon-simple-lon', '', 'Longitude element for simple geofield exists.');
@@ -289,18 +317,31 @@ class GeoFieldElementTestCase extends BackdropWebTestCase {
   }
 }
 
+/**
+ *
+ */
 class GeofieldFormatterTestCase extends GeofieldBaseTestCase {
 
+  /**
+   *
+   */
   protected function setUp() {
     parent::setUp(array('geofield', 'field_test'));
 
     $this->admin_user = $this->backdropCreateUser(array('administer filters'));
-    $this->web_user = $this->backdropCreateUser(array('access field_test content', 'administer field_test content', 'administer modules'));
+    $this->web_user = $this->backdropCreateUser(array(
+      'access field_test content',
+      'administer field_test content',
+      'administer modules',
+    ));
     $this->backdropLogin($this->web_user);
   }
 
+  /**
+   *
+   */
   protected function testGeofieldWKTFormatter() {
-    // Test lat/lon widget
+    // Test lat/lon widget.
     $this->_testGeoFieldAPISetup('geofield_wkt', 'geofield_wkt');
     // Display creation form.
     $langcode = LANGUAGE_NONE;
@@ -323,8 +364,11 @@ class GeofieldFormatterTestCase extends GeofieldBaseTestCase {
     $this->_testWKTFormatter($id, $geometry, 'wkt');
   }
 
+  /**
+   *
+   */
   protected function testGeofieldGeoJSONFormatter() {
-    // Test lat/lon widget
+    // Test lat/lon widget.
     $this->_testGeoFieldAPISetup('geofield_wkt', 'geofield_geojson');
     // Display creation form.
     $langcode = LANGUAGE_NONE;
@@ -344,7 +388,7 @@ class GeofieldFormatterTestCase extends GeofieldBaseTestCase {
     preg_match('|test-entity/manage/(\d+)/edit|', $this->url, $match);
     $id = $match[1];
 
-    // Test GeoJSON output
+    // Test GeoJSON output.
     $entity = field_test_entity_test_load($id);
     $entity->content = field_attach_view('test_entity', $entity, 'full');
     $this->content = backdrop_render($entity->content);
@@ -352,8 +396,11 @@ class GeofieldFormatterTestCase extends GeofieldBaseTestCase {
     $this->assertText($value, 'GeoJSON output is correct.');
   }
 
+  /**
+   *
+   */
   protected function testGeofieldDefFormatter() {
-    // Test lat/lon widget
+    // Test lat/lon widget.
     $this->_testGeoFieldAPISetup('geofield_wkt', 'geofield_def_list');
     // Display creation form.
     $langcode = LANGUAGE_NONE;
@@ -373,7 +420,7 @@ class GeofieldFormatterTestCase extends GeofieldBaseTestCase {
     preg_match('|test-entity/manage/(\d+)/edit|', $this->url, $match);
     $id = $match[1];
 
-    // Test GeoJSON output
+    // Test GeoJSON output.
     $entity = field_test_entity_test_load($id);
     $entity->content = field_attach_view('test_entity', $entity, 'full');
     $this->content = backdrop_render($entity->content);
